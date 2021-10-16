@@ -1,5 +1,6 @@
 import { ModifiedPatient } from 'utils/types/patient';
 import Table from 'components/table';
+import { Container } from './PatientInfoStyle';
 
 interface PatientProps {
   patients: ModifiedPatient[];
@@ -16,7 +17,11 @@ const PatientInfo: React.FC<PatientProps> = ({ patients }: PatientProps) => {
     { title: '사망 여부', dataIndex: 'isDeath', key: 'isDeath' },
   ];
 
-  return <Table columns={columns} dataSource={patients} />;
+  return (
+    <Container>
+      <Table columns={columns} dataSource={patients} />
+    </Container>
+  );
 };
 
 export default PatientInfo;

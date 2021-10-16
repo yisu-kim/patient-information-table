@@ -1,3 +1,11 @@
+import {
+  Table as TableContainer,
+  TableData,
+  TableHeader,
+  TableHeaderGroup,
+  TableRow,
+} from './TableStyle';
+
 interface TableProps {
   columns: { title: string; dataIndex: string; key: string }[];
   dataSource: any[];
@@ -5,24 +13,24 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ columns, dataSource }: TableProps) => {
   return (
-    <table>
-      <thead>
-        <tr>
+    <TableContainer>
+      <TableHeaderGroup>
+        <TableRow>
           {columns.map((column) => (
-            <th key={column.dataIndex}>{column.title}</th>
+            <TableHeader key={column.dataIndex}>{column.title}</TableHeader>
           ))}
-        </tr>
-      </thead>
+        </TableRow>
+      </TableHeaderGroup>
       <tbody>
         {dataSource.map((data, index) => (
-          <tr key={index}>
+          <TableRow key={index}>
             {columns.map((column) => (
-              <td key={column.key}>{data[column.dataIndex]}</td>
+              <TableData key={column.key}>{data[column.dataIndex]}</TableData>
             ))}
-          </tr>
+          </TableRow>
         ))}
       </tbody>
-    </table>
+    </TableContainer>
   );
 };
 
