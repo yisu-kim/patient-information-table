@@ -29,8 +29,8 @@ const PatientInfo: React.FC<PatientProps> = ({
     {
       title: '환자 id',
       dataIndex: 'personID',
-      key: 'personID',
-      sortOrder: sortedInfo.columnKey === 'personID' && sortedInfo.order,
+      key: 'person_id',
+      sortOrder: sortedInfo.columnKey === 'person_id' && sortedInfo.order,
     },
     {
       title: '성별',
@@ -41,8 +41,8 @@ const PatientInfo: React.FC<PatientProps> = ({
     {
       title: '생년월일',
       dataIndex: 'birthDatetime',
-      key: 'birthDatetime',
-      sortOrder: sortedInfo.columnKey === 'birthDatetime' && sortedInfo.order,
+      key: 'birth',
+      sortOrder: sortedInfo.columnKey === 'birth' && sortedInfo.order,
     },
     {
       title: '나이',
@@ -64,8 +64,8 @@ const PatientInfo: React.FC<PatientProps> = ({
     {
       title: '사망 여부',
       dataIndex: 'isDeath',
-      key: 'isDeath',
-      sortOrder: sortedInfo.columnKey === 'isDeath' && sortedInfo.order,
+      key: 'death',
+      sortOrder: sortedInfo.columnKey === 'death' && sortedInfo.order,
     },
   ];
 
@@ -74,7 +74,12 @@ const PatientInfo: React.FC<PatientProps> = ({
       try {
         // const {
         //   data: { patient },
-        // } = await patientService.getPatientList(currentPage, rowsPerPage);
+        // } = await patientService.getPatientList(
+        //   currentPage,
+        //   rowsPerPage,
+        //   sortedInfo.order === 'desc' ? true : false,
+        //   sortedInfo.columnKey,
+        // );
         // setData(patient);
 
         /**
@@ -85,7 +90,7 @@ const PatientInfo: React.FC<PatientProps> = ({
         console.log(error);
       }
     })();
-  }, [currentPage, rowsPerPage, patientService]);
+  }, [currentPage, rowsPerPage, patientService, sortedInfo]);
 
   const handlePageClick = (page: number) => {
     setCurrentPage(page);

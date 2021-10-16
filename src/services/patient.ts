@@ -24,9 +24,28 @@ class PatientService {
   getPatientList = (
     page = 1,
     length = 10,
+    order_desc = false,
+    order_column?: string,
   ): Promise<AxiosResponse<PatientList>> => {
+    type Params = {
+      page: number;
+      length: number;
+      order_desc: boolean;
+      order_column?: string;
+    };
+
+    const params: Params = {
+      page,
+      length,
+      order_desc,
+    };
+
+    if (order_column) {
+      params.order_column = order_column;
+    }
+
     return this.httpClient.get<PatientList>(PATIENT_LIST_URL, {
-      params: { page, length },
+      params,
     });
   };
 
