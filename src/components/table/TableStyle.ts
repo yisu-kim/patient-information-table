@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 
-export const Table = styled.table`
+export const TableContainer = styled.div`
   width: 800px;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
-  border-collapse: collapse;
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
 `;
+
+export const TableContents = styled.table``;
 
 export const TableHeaderGroup = styled.thead`
   height: 40px;

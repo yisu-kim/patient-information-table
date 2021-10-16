@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PatientService from 'services/patient';
-import { ModifiedPatient } from 'utils/types/patient';
 import PatientInfo from 'pages/patientInfo';
 
 const httpClient = axios.create({
@@ -10,25 +8,7 @@ const httpClient = axios.create({
 const patientService = new PatientService(httpClient);
 
 const App: React.FC = () => {
-  const [data, setData] = useState<ModifiedPatient[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const {
-        data: {
-          patient: { list },
-        },
-      } = await patientService.getPatientList();
-      setData(
-        list.map((patient) => ({
-          ...patient,
-          isDeath: patient.isDeath ? 'T' : 'F',
-        })),
-      );
-    })();
-  }, []);
-
-  return <PatientInfo patients={data} />;
+  return <PatientInfo patientService={patientService} />;
 };
 
 export default App;

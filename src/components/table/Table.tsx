@@ -1,5 +1,7 @@
+import TablePagination from './TablePagination';
 import {
-  Table as TableContainer,
+  TableContainer,
+  TableContents,
   TableData,
   TableHeader,
   TableHeaderGroup,
@@ -8,28 +10,48 @@ import {
 
 interface TableProps {
   columns: { title: string; dataIndex: string; key: string }[];
-  dataSource: any[];
+  dataSource?: any[];
+  pagination: {
+    currentPage: number;
+    total: number;
+    rowsPerPage: number;
+    handlePageClick: (page: number) => void;
+    handleRowsPerPageChange: (rowsPerPage: string) => void;
+  };
 }
 
-const Table: React.FC<TableProps> = ({ columns, dataSource }: TableProps) => {
+const Table: React.FC<TableProps> = ({
+  columns,
+  dataSource = [],
+  pagination,
+}: TableProps) => {
   return (
     <TableContainer>
-      <TableHeaderGroup>
-        <TableRow>
-          {columns.map((column) => (
-            <TableHeader key={column.dataIndex}>{column.title}</TableHeader>
-          ))}
-        </TableRow>
-      </TableHeaderGroup>
-      <tbody>
-        {dataSource.map((data, index) => (
-          <TableRow key={index}>
+      <TableContents>
+        <TableHeaderGroup>
+          <TableRow>
             {columns.map((column) => (
-              <TableData key={column.key}>{data[column.dataIndex]}</TableData>
+              <TableHeader key={column.dataIndex}>{column.title}</TableHeader>
             ))}
           </TableRow>
-        ))}
-      </tbody>
+        </TableHeaderGroup>
+        <tbody>
+          {dataSource.map((data, index) => (
+            <TableRow key={index}>
+              {columns.map((column) => (
+                <TableData key={column.key}>{data[column.dataIndex]}</TableData>
+              ))}
+            </TableRow>
+          ))}
+        </tbody>
+      </TableContents>
+      <TablePagination
+        defaultCurrent={pagination.currentPage}
+        total={pagination.total}
+        rowsPerPage={pagination.rowsPerPage}
+        onPageClick={pagination.handlePageClick}
+        onRowsPerPageChange={pagination.handleRowsPerPageChange}
+      />
     </TableContainer>
   );
 };

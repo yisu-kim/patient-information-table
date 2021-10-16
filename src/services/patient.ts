@@ -21,8 +21,13 @@ const PATIENT_STATS_URL = '/api/patient/stats';
 class PatientService {
   constructor(private httpClient: AxiosInstance) {}
 
-  getPatientList = (): Promise<AxiosResponse<PatientList>> => {
-    return this.httpClient.get<PatientList>(PATIENT_LIST_URL);
+  getPatientList = (
+    page = 1,
+    length = 10,
+  ): Promise<AxiosResponse<PatientList>> => {
+    return this.httpClient.get<PatientList>(PATIENT_LIST_URL, {
+      params: { page, length },
+    });
   };
 
   getGenderList = (): Promise<AxiosResponse<GenderList>> => {
