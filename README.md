@@ -1,46 +1,56 @@
-# Getting Started with Create React App
+<br />
+<p align="center">
+  <h3 align="center">환자 정보를 보여주는 테이블 & 차트</h3>
+</p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## About The Project
 
-## Available Scripts
+### 환자 정보 테이블
 
-In the project directory, you can run:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37607373/137590944-b717d95c-00c3-40ce-97dc-ed8b23ccf797.png" alt="project patient table view screenshot" height=600 />
+</p>
 
-### `yarn start`
+### 테이블 페이지네이션
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37607373/137591101-5c937de3-31bd-449e-b4b2-551677805d95.gif" alt="project patient table pagination screenshot" height=600 />
+</p>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 테이블 컬럼 기준 정렬
 
-### `yarn test`
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37607373/137591260-c380988b-a68d-49c1-aeb0-00efaa7529f4.gif" alt="project patient table sorting screenshot" height=600 />
+</p>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Built With
 
-### `yarn build`
+- React
+- TypeScript
+- axios
+- styled-components
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To install packages:
 
-### `yarn eject`
+```sh
+yarn install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+To serve the app:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```sh
+yarn start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Features
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+1. 환자 정보를 탐색할 수 있는 테이블 컴포넌트
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+   - API 호출을 통해 환자 정보 가져오기 (2021.10.16 기준, API 에러로 dummy 데이터 사용)
+   - 환자 id, 성별, 생년월일, 나이, 인종, 민족, 사망 여부 컬럼 및 데이터 표현
+   - 버튼을 통해 페이지 이동 가능, 한 페이지당 row 갯수 선택 가능, 데이터 총합 관련 정보 표시
+   - 환자 id, 성별, 생년월일, 인종, 민족, 사망여부 컬럼으로 정렬 가능
