@@ -22,7 +22,7 @@ interface TableProps {
     key: string;
     sortOrder?: SortOrder;
   }[];
-  onSort: (columnKey: string) => void;
+  onSort: (columnKey: string, columnDataIndex?: string) => void;
   dataSource?: any[];
   pagination: {
     currentPage: number;
@@ -47,7 +47,7 @@ const Table: React.FC<TableProps> = ({
             {columns.map((column) => (
               <TableHeader
                 key={column.dataIndex}
-                onClick={() => onSort(column.key)}
+                onClick={() => onSort(column.key, column.dataIndex)}
               >
                 <span>{column.title}</span>
                 {column.sortOrder &&

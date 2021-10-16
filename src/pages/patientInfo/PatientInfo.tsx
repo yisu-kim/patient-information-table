@@ -13,6 +13,7 @@ interface PatientProps {
 type SortedInfo = {
   order: SortOrder;
   columnKey: string;
+  columnDataIndex?: string; // for dummy data
 };
 
 const PatientInfo: React.FC<PatientProps> = ({
@@ -24,6 +25,7 @@ const PatientInfo: React.FC<PatientProps> = ({
   const [sortedInfo, setSortedInfo] = useState<SortedInfo>({
     order: false,
     columnKey: '',
+    columnDataIndex: '',
   });
   const columns = [
     {
@@ -85,7 +87,14 @@ const PatientInfo: React.FC<PatientProps> = ({
         /**
          * API 500 오류로 더미 데이터 사용
          */
-        setData(generatePatientList(currentPage, rowsPerPage));
+        setData(
+          generatePatientList(
+            currentPage,
+            rowsPerPage,
+            sortedInfo.order === 'desc' ? true : false,
+            sortedInfo.columnDataIndex,
+          ),
+        );
       } catch (error) {
         console.log(error);
       }
@@ -104,7 +113,7 @@ const PatientInfo: React.FC<PatientProps> = ({
     setRowsPerPage(newRowsPerPage);
   };
 
-  const handleColumnSort = (columnKey: string) => {
+  const handleColumnSort = (columnKey: string, columnDataIndex?: string) => {
     setSortedInfo((sortedInfo) => ({
       order:
         sortedInfo?.order === 'asc'
@@ -113,6 +122,7 @@ const PatientInfo: React.FC<PatientProps> = ({
           ? false
           : 'asc',
       columnKey,
+      columnDataIndex,
     }));
   };
 
