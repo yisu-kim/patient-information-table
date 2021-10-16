@@ -1,6 +1,10 @@
 <br />
 <p align="center">
   <h3 align="center">환자 정보를 보여주는 테이블 & 차트</h3>
+
+  <p align="center">
+    <a href="https://patient-table-n-chart.netlify.app/">View Demo</a>
+  </p>
 </p>
 
 ## About The Project
