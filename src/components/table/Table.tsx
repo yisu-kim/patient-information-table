@@ -1,3 +1,7 @@
+import {
+  SortAscendingOutlined,
+  SortDescendingOutlined,
+} from '@ant-design/icons';
 import TablePagination from './TablePagination';
 import {
   TableContainer,
@@ -5,11 +9,20 @@ import {
   TableData,
   TableHeader,
   TableHeaderGroup,
+  TableHeaderIcon,
   TableRow,
 } from './TableStyle';
 
+export type SortOrder = false | 'asc' | 'desc';
+
 interface TableProps {
-  columns: { title: string; dataIndex: string; key: string }[];
+  columns: {
+    title: string;
+    dataIndex: string;
+    key: string;
+    sortOrder?: SortOrder;
+  }[];
+  onSort: (columnKey: string) => void;
   dataSource?: any[];
   pagination: {
     currentPage: number;
@@ -22,6 +35,7 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({
   columns,
+  onSort,
   dataSource = [],
   pagination,
 }: TableProps) => {
@@ -31,7 +45,22 @@ const Table: React.FC<TableProps> = ({
         <TableHeaderGroup>
           <TableRow>
             {columns.map((column) => (
-              <TableHeader key={column.dataIndex}>{column.title}</TableHeader>
+              <TableHeader
+                key={column.dataIndex}
+                onClick={() => onSort(column.key)}
+              >
+                <span>{column.title}</span>
+                {column.sortOrder &&
+                  (column.sortOrder === 'asc' ? (
+                    <TableHeaderIcon>
+                      <SortAscendingOutlined />
+                    </TableHeaderIcon>
+                  ) : (
+                    <TableHeaderIcon>
+                      <SortDescendingOutlined />
+                    </TableHeaderIcon>
+                  ))}
+              </TableHeader>
             ))}
           </TableRow>
         </TableHeaderGroup>

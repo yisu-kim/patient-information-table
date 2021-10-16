@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
-import { PatientList } from 'utils/types/patient';
-import Table from 'components/table';
-import { Container } from './PatientInfoStyle';
 import PatientService from 'services/patient';
+import { PatientList } from 'utils/types/patient';
 import { generatePatientList } from 'utils/dummy/patientList';
+import Table from 'components/table';
+import { SortOrder } from 'components/table/Table';
+import { Container } from './PatientInfoStyle';
 
 interface PatientProps {
   patientService: PatientService;
 }
+
+type SortedInfo = {
+  order: SortOrder;
+  columnKey: string;
+};
 
 const PatientInfo: React.FC<PatientProps> = ({
   patientService,
@@ -15,14 +21,52 @@ const PatientInfo: React.FC<PatientProps> = ({
   const [data, setData] = useState<PatientList['patient']>();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sortedInfo, setSortedInfo] = useState<SortedInfo>({
+    order: false,
+    columnKey: '',
+  });
   const columns = [
-    { title: '환자 id', dataIndex: 'personID', key: 'personID' },
-    { title: '성별', dataIndex: 'gender', key: 'gender' },
-    { title: '생년월일', dataIndex: 'birthDatetime', key: 'birthDatetime' },
-    { title: '나이', dataIndex: 'age', key: 'age' },
-    { title: '인종', dataIndex: 'race', key: 'race' },
-    { title: '민족', dataIndex: 'ethnicity', key: 'ethnicity' },
-    { title: '사망 여부', dataIndex: 'isDeath', key: 'isDeath' },
+    {
+      title: '환자 id',
+      dataIndex: 'personID',
+      key: 'personID',
+      sortOrder: sortedInfo.columnKey === 'personID' && sortedInfo.order,
+    },
+    {
+      title: '성별',
+      dataIndex: 'gender',
+      key: 'gender',
+      sortOrder: sortedInfo.columnKey === 'gender' && sortedInfo.order,
+    },
+    {
+      title: '생년월일',
+      dataIndex: 'birthDatetime',
+      key: 'birthDatetime',
+      sortOrder: sortedInfo.columnKey === 'birthDatetime' && sortedInfo.order,
+    },
+    {
+      title: '나이',
+      dataIndex: 'age',
+      key: 'age',
+    },
+    {
+      title: '인종',
+      dataIndex: 'race',
+      key: 'race',
+      sortOrder: sortedInfo.columnKey === 'race' && sortedInfo.order,
+    },
+    {
+      title: '민족',
+      dataIndex: 'ethnicity',
+      key: 'ethnicity',
+      sortOrder: sortedInfo.columnKey === 'ethnicity' && sortedInfo.order,
+    },
+    {
+      title: '사망 여부',
+      dataIndex: 'isDeath',
+      key: 'isDeath',
+      sortOrder: sortedInfo.columnKey === 'isDeath' && sortedInfo.order,
+    },
   ];
 
   useEffect(() => {
@@ -55,11 +99,24 @@ const PatientInfo: React.FC<PatientProps> = ({
     setRowsPerPage(newRowsPerPage);
   };
 
+  const handleColumnSort = (columnKey: string) => {
+    setSortedInfo((sortedInfo) => ({
+      order:
+        sortedInfo?.order === 'asc'
+          ? 'desc'
+          : sortedInfo?.order === 'desc'
+          ? false
+          : 'asc',
+      columnKey,
+    }));
+  };
+
   return (
     <Container>
       {data && (
         <Table
           columns={columns}
+          onSort={handleColumnSort}
           dataSource={data.list.map((patient) => ({
             ...patient,
             isDeath: patient.isDeath ? 'T' : 'F',
