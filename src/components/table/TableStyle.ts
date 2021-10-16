@@ -26,6 +26,11 @@ export const TableHeader = styled.th`
   vertical-align: middle;
 `;
 
+export const TableHeaderIcon = styled.span`
+  float: right;
+  color: #bfbfbf;
+`;
+
 export const TableData = styled.td`
   vertical-align: middle;
 `;
