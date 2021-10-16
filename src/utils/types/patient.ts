@@ -8,6 +8,8 @@ export type Patient = {
   race: string;
 };
 
+export type ModifiedPatient = Omit<Patient, 'isDeath'> & { isDeath: 'T' | 'F' };
+
 export type PatientList = {
   patient: {
     list: Patient[];
