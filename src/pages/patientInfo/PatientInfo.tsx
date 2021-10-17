@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import PatientService from 'services/patient';
+import PatientService, { PatientListParams } from 'services/patient';
 import { PatientList } from 'utils/types/patient';
 import { generatePatientList } from 'utils/dummy/patientList';
 import Table from 'components/table';
@@ -74,27 +74,22 @@ const PatientInfo: React.FC<PatientProps> = ({
   useEffect(() => {
     (async () => {
       try {
+        const params: PatientListParams = {
+          page: currentPage,
+          length: rowsPerPage,
+          order_column: sortedInfo.columnDataIndex,
+          order_desc: sortedInfo.order === 'desc' ? true : false,
+        };
+
         // const {
         //   data: { patient },
-        // } = await patientService.getPatientList(
-        //   currentPage,
-        //   rowsPerPage,
-        //   sortedInfo.order === 'desc' ? true : false,
-        //   sortedInfo.columnKey,
-        // );
+        // } = await patientService.getPatientList(params);
         // setData(patient);
 
         /**
          * API 500 오류로 더미 데이터 사용
          */
-        setData(
-          generatePatientList(
-            currentPage,
-            rowsPerPage,
-            sortedInfo.order === 'desc' ? true : false,
-            sortedInfo.columnDataIndex,
-          ),
-        );
+        setData(generatePatientList(params));
       } catch (error) {
         console.log(error);
       }

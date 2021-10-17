@@ -1,13 +1,18 @@
+import { PatientListParams } from 'services/patient';
 import { PatientList } from 'utils/types/patient';
 
-export const generatePatientList = (
-  page: number,
-  length: number,
+export const generatePatientList = ({
+  page = 1,
+  length = 10,
   order_desc = false,
-  order_column?: string,
-): PatientList['patient'] => {
+  ...rest
+}: PatientListParams): PatientList['patient'] => {
+  const { order_column, gender, race, ethnicity, age_min, age_max, death } =
+    rest;
   const totalLength = 1000;
   const list = [];
+
+  // for generating
   for (let i = (page - 1) * length + 1; i <= page * length; i++) {
     list.push({
       personID: i,
@@ -20,6 +25,7 @@ export const generatePatientList = (
     });
   }
 
+  // for sorting
   if (order_column) {
     list.sort((a: any, b: any) => {
       if (order_desc) {
@@ -35,7 +41,6 @@ export const generatePatientList = (
         ? 1
         : 0;
     });
-    console.log(list);
   }
 
   return {
