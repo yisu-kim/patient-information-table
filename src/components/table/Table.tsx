@@ -3,6 +3,7 @@ import {
   CaretUpOutlined,
   FilterFilled,
 } from '@ant-design/icons';
+import { SortedInfo } from 'pages/patientInfo/PatientInfo';
 import TablePagination from './TablePagination';
 import {
   FilterIcon,
@@ -29,7 +30,7 @@ interface TableProps {
     sortOrder?: SortOrder;
     filters?: { text: string; value: any }[];
   }[];
-  onSort: (columnKey: string, columnDataIndex?: string) => void;
+  onSort: ({ order, columnKey, columnDataIndex }: SortedInfo) => void;
   dataSource?: any[];
   pagination: {
     currentPage: number;
@@ -55,7 +56,13 @@ const Table: React.FC<TableProps> = ({
               <TableHeader key={column.dataIndex}>
                 <TableHeaderContainer>
                   <TableHeaderTitle
-                    onClick={() => onSort(column.key, column.dataIndex)}
+                    onClick={() =>
+                      onSort({
+                        order: column.sortOrder ? column.sortOrder : false,
+                        columnKey: column.key,
+                        columnDataIndex: column.dataIndex,
+                      })
+                    }
                   >
                     {column.title}
                     <TableHeaderIcon>

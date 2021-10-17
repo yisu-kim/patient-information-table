@@ -140,17 +140,16 @@ const PatientInfo: React.FC<PatientProps> = ({
     setRowsPerPage(newRowsPerPage);
   };
 
-  const handleColumnSort = (columnKey: string, columnDataIndex?: string) => {
-    setSortedInfo((sortedInfo) => ({
-      order:
-        sortedInfo?.order === 'asc'
-          ? 'desc'
-          : sortedInfo?.order === 'desc'
-          ? false
-          : 'asc',
+  const handleColumnSort = ({
+    order,
+    columnKey,
+    columnDataIndex,
+  }: SortedInfo) => {
+    setSortedInfo({
+      order: order === 'asc' ? 'desc' : order === 'desc' ? false : 'asc',
       columnKey,
       columnDataIndex,
-    }));
+    });
   };
 
   return (
@@ -178,7 +177,7 @@ const PatientInfo: React.FC<PatientProps> = ({
 
 export default PatientInfo;
 
-type SortedInfo = {
+export type SortedInfo = {
   order: SortOrder;
   columnKey: string;
   columnDataIndex?: string; // for dummy data
