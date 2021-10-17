@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PatientService, { PatientListParams } from 'services/patient';
 import { PatientList } from 'utils/types/patient';
 import { generatePatientList } from 'utils/dummy/patientList';
 import Table from 'components/table';
 import { SortOrder } from 'components/table/Table';
 import { Container } from './PatientInfoStyle';
+import { generateGenderList } from 'utils/dummy/genderList';
+import { generateRaceList } from 'utils/dummy/raceList';
+import { generateEthnicityList } from 'utils/dummy/ethnicityList';
 
 interface PatientProps {
   patientService: PatientService;
 }
-
-type SortedInfo = {
-  order: SortOrder;
-  columnKey: string;
-  columnDataIndex?: string; // for dummy data
-};
 
 const PatientInfo: React.FC<PatientProps> = ({
   patientService,
@@ -27,6 +24,8 @@ const PatientInfo: React.FC<PatientProps> = ({
     columnKey: '',
     columnDataIndex: '',
   });
+  const filters = useRef<filters>();
+
   const columns = [
     {
       title: '환자 id',
@@ -39,6 +38,10 @@ const PatientInfo: React.FC<PatientProps> = ({
       dataIndex: 'gender',
       key: 'gender',
       sortOrder: sortedInfo.columnKey === 'gender' && sortedInfo.order,
+      filters: filters.current?.gender.map((item) => ({
+        text: item,
+        value: item,
+      })),
     },
     {
       title: '생년월일',
@@ -56,20 +59,49 @@ const PatientInfo: React.FC<PatientProps> = ({
       dataIndex: 'race',
       key: 'race',
       sortOrder: sortedInfo.columnKey === 'race' && sortedInfo.order,
+      filters: filters.current?.race.map((item) => ({
+        text: item,
+        value: item,
+      })),
     },
     {
       title: '민족',
       dataIndex: 'ethnicity',
       key: 'ethnicity',
       sortOrder: sortedInfo.columnKey === 'ethnicity' && sortedInfo.order,
+      filters: filters.current?.ethnicity.map((item) => ({
+        text: item,
+        value: item,
+      })),
     },
     {
       title: '사망 여부',
       dataIndex: 'isDeath',
       key: 'death',
       sortOrder: sortedInfo.columnKey === 'death' && sortedInfo.order,
+      filters: [
+        { text: 'T', value: true },
+        { text: 'F', value: false },
+      ],
     },
   ];
+
+  useEffect(() => {
+    try {
+      (async () => {
+        const { genderList } = generateGenderList();
+        const { raceList } = generateRaceList();
+        const { ethnicityList } = generateEthnicityList();
+        filters.current = {
+          gender: genderList,
+          race: raceList,
+          ethnicity: ethnicityList,
+        };
+      })();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -145,3 +177,15 @@ const PatientInfo: React.FC<PatientProps> = ({
 };
 
 export default PatientInfo;
+
+type SortedInfo = {
+  order: SortOrder;
+  columnKey: string;
+  columnDataIndex?: string; // for dummy data
+};
+
+type filters = {
+  gender: string[];
+  race: string[];
+  ethnicity: string[];
+};
