@@ -1,15 +1,21 @@
 import {
-  SortAscendingOutlined,
-  SortDescendingOutlined,
+  CaretDownOutlined,
+  CaretUpOutlined,
+  FilterFilled,
 } from '@ant-design/icons';
 import TablePagination from './TablePagination';
 import {
+  FilterIcon,
+  OrderSortIcon,
+  SortIcon,
   TableContainer,
   TableContents,
   TableData,
   TableHeader,
+  TableHeaderContainer,
   TableHeaderGroup,
   TableHeaderIcon,
+  TableHeaderTitle,
   TableRow,
 } from './TableStyle';
 
@@ -21,6 +27,7 @@ interface TableProps {
     dataIndex: string;
     key: string;
     sortOrder?: SortOrder;
+    filters?: { text: string; value: any }[];
   }[];
   onSort: (columnKey: string, columnDataIndex?: string) => void;
   dataSource?: any[];
@@ -45,21 +52,33 @@ const Table: React.FC<TableProps> = ({
         <TableHeaderGroup>
           <TableRow>
             {columns.map((column) => (
-              <TableHeader
-                key={column.dataIndex}
-                onClick={() => onSort(column.key, column.dataIndex)}
-              >
-                <span>{column.title}</span>
-                {column.sortOrder &&
-                  (column.sortOrder === 'asc' ? (
+              <TableHeader key={column.dataIndex}>
+                <TableHeaderContainer>
+                  <TableHeaderTitle
+                    onClick={() => onSort(column.key, column.dataIndex)}
+                  >
+                    {column.title}
                     <TableHeaderIcon>
-                      <SortAscendingOutlined />
+                      {column.sortOrder !== undefined && (
+                        <SortIcon>
+                          <OrderSortIcon active={column.sortOrder === 'asc'}>
+                            <CaretUpOutlined />
+                          </OrderSortIcon>
+                          <OrderSortIcon active={column.sortOrder === 'desc'}>
+                            <CaretDownOutlined />
+                          </OrderSortIcon>
+                        </SortIcon>
+                      )}
                     </TableHeaderIcon>
-                  ) : (
-                    <TableHeaderIcon>
-                      <SortDescendingOutlined />
-                    </TableHeaderIcon>
-                  ))}
+                  </TableHeaderTitle>
+                  <TableHeaderIcon>
+                    {column.filters && (
+                      <FilterIcon>
+                        <FilterFilled />
+                      </FilterIcon>
+                    )}
+                  </TableHeaderIcon>
+                </TableHeaderContainer>
               </TableHeader>
             ))}
           </TableRow>
