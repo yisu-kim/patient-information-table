@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
 import PatientService, { PatientListParams } from 'services/patient';
 import { PatientList } from 'utils/types/patient';
-import { generatePatientList } from 'utils/dummy/patientList';
 import Table from 'components/table';
 import { FilteredInfo, SortedInfo, SortOrder } from 'components/table/Table';
 import { Container } from './PatientInfoStyle';
 import { Filter } from 'components/table/TableFilterBar';
-import { generateGenderList } from 'utils/dummy/genderList';
-import { generateRaceList } from 'utils/dummy/raceList';
-import { generateEthnicityList } from 'utils/dummy/ethnicityList';
 
 interface PatientProps {
   patientService: PatientService;
@@ -32,9 +28,15 @@ const PatientInfo: React.FC<PatientProps> = ({
   useEffect(() => {
     try {
       (async () => {
-        const { genderList } = generateGenderList();
-        const { raceList } = generateRaceList();
-        const { ethnicityList } = generateEthnicityList();
+        const {
+          data: { genderList },
+        } = await patientService.getGenderList();
+        const {
+          data: { raceList },
+        } = await patientService.getRaceList();
+        const {
+          data: { ethnicityList },
+        } = await patientService.getEthnicityList();
 
         const filteredGender = findByColumnKey(filteredInfo, 'gender');
         const genderFilters = makeFilters(genderList);
@@ -89,15 +91,10 @@ const PatientInfo: React.FC<PatientProps> = ({
           death: filters?.death.find((item) => item.selected)?.value,
         };
 
-        // const {
-        //   data: { patient },
-        // } = await patientService.getPatientList(params);
-        // setData(patient);
-
-        /**
-         * API 500 오류로 더미 데이터 사용
-         */
-        setData(generatePatientList(params));
+        const {
+          data: { patient },
+        } = await patientService.getPatientList(params);
+        setData(patient);
 
         setColumns([
           {
