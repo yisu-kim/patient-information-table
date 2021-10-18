@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import {
   CaretDownOutlined,
   CaretUpOutlined,
   FilterFilled,
 } from '@ant-design/icons';
-import { SortedInfo } from 'pages/patientInfo/PatientInfo';
+import TableFilterBar, { Filter } from './TableFilterBar';
 import TablePagination from './TablePagination';
 import {
   FilterIcon,
@@ -28,9 +29,10 @@ interface TableProps {
     dataIndex: string;
     key: string;
     sortOrder?: SortOrder;
-    filters?: { text: string; value: any }[];
+    filters?: Filter[];
   }[];
   onSort: ({ order, columnKey, columnDataIndex }: SortedInfo) => void;
+  onFilter: ({ columnKey, filter }: FilteredInfo) => void;
   dataSource?: any[];
   pagination: {
     currentPage: number;
@@ -44,9 +46,50 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({
   columns,
   onSort,
+  onFilter,
   dataSource = [],
   pagination,
 }: TableProps) => {
+  const [isFilterBarOpen, setIsFilterBarOpen] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState<CurrentFilters>({
+    columnKey: '',
+    filters: [],
+  });
+
+  const handleFilterBar = (columnKey: string, filters?: Filter[]) => {
+    if (columnKey !== currentFilters.columnKey) {
+      setCurrentFilters({ columnKey, filters: filters! });
+      setIsFilterBarOpen(true);
+      return;
+    }
+
+    setCurrentFilters({ columnKey: '', filters: [] });
+    setIsFilterBarOpen(false);
+  };
+
+  const handleSelectFilter = (filter: Filter) => {
+    const newFilters = [...currentFilters.filters];
+    setCurrentFilters((currentFilters) => ({
+      ...currentFilters,
+      filters: newFilters.map((item) =>
+        item.value === filter.value
+          ? {
+              ...item,
+              selected: !filter.selected,
+            }
+          : {
+              ...item,
+              selected: false,
+            },
+      ),
+    }));
+
+    onFilter({
+      columnKey: currentFilters.columnKey,
+      filter: { ...filter, selected: !filter.selected },
+    });
+  };
+
   return (
     <TableContainer>
       <TableContents>
@@ -78,7 +121,10 @@ const Table: React.FC<TableProps> = ({
                       )}
                     </TableHeaderIcon>
                   </TableHeaderTitle>
-                  <TableHeaderIcon>
+                  {console.log(column.filters)}
+                  <TableHeaderIcon
+                    onClick={() => handleFilterBar(column.key, column.filters)}
+                  >
                     {column.filters && (
                       <FilterIcon>
                         <FilterFilled />
@@ -89,6 +135,16 @@ const Table: React.FC<TableProps> = ({
               </TableHeader>
             ))}
           </TableRow>
+          {isFilterBarOpen && (
+            <TableRow>
+              <TableHeader colSpan={7}>
+                <TableFilterBar
+                  filters={currentFilters.filters}
+                  onSelectFilter={handleSelectFilter}
+                />
+              </TableHeader>
+            </TableRow>
+          )}
         </TableHeaderGroup>
         <tbody>
           {dataSource.map((data, index) => (
@@ -112,3 +168,19 @@ const Table: React.FC<TableProps> = ({
 };
 
 export default Table;
+
+export type SortedInfo = {
+  order: SortOrder;
+  columnKey: string;
+  columnDataIndex?: string; // for dummy data
+};
+
+export type FilteredInfo = {
+  columnKey: string;
+  filter: Filter;
+};
+
+type CurrentFilters = {
+  columnKey: string;
+  filters: Filter[];
+};
