@@ -83,7 +83,7 @@ const PatientInfo: React.FC<PatientProps> = ({
         const params: PatientListParams = {
           page: currentPage,
           length: rowsPerPage,
-          order_column: sortedInfo.columnDataIndex,
+          order_column: sortedInfo.columnKey,
           order_desc: sortedInfo.order === 'desc' ? true : false,
           gender: filters?.gender.find((item) => item.selected)?.value,
           race: filters?.race.find((item) => item.selected)?.value,
