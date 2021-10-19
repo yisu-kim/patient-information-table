@@ -63,7 +63,7 @@ const PatientInfo: React.FC<PatientProps> = ({
         ];
         const death = !filteredDeath
           ? deathFilters
-          : addSelectedInfo(genderFilters, filteredDeath);
+          : addSelectedInfo(deathFilters, filteredDeath);
 
         setFilters({
           gender,
