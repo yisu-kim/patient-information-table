@@ -8,7 +8,7 @@ import TableFilterBar, { Filter } from './TableFilterBar';
 import TablePagination from './TablePagination';
 import {
   FilterIcon,
-  OrderSortIcon,
+  OrderIcon,
   SortIcon,
   TableContainer,
   TableContents,
@@ -111,22 +111,25 @@ const Table: React.FC<TableProps> = ({
                     <TableHeaderIcon>
                       {column.sortOrder !== undefined && (
                         <SortIcon>
-                          <OrderSortIcon active={column.sortOrder === 'asc'}>
+                          <OrderIcon active={column.sortOrder === 'asc'}>
                             <CaretUpOutlined />
-                          </OrderSortIcon>
-                          <OrderSortIcon active={column.sortOrder === 'desc'}>
+                          </OrderIcon>
+                          <OrderIcon active={column.sortOrder === 'desc'}>
                             <CaretDownOutlined />
-                          </OrderSortIcon>
+                          </OrderIcon>
                         </SortIcon>
                       )}
                     </TableHeaderIcon>
                   </TableHeaderTitle>
-                  {console.log(column.filters)}
                   <TableHeaderIcon
                     onClick={() => handleFilterBar(column.key, column.filters)}
                   >
                     {column.filters && (
-                      <FilterIcon>
+                      <FilterIcon
+                        active={column.filters.some(
+                          (filter) => filter.selected,
+                        )}
+                      >
                         <FilterFilled />
                       </FilterIcon>
                     )}

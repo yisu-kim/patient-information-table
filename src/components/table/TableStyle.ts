@@ -59,15 +59,20 @@ interface OrderIconParams {
   active: boolean;
 }
 
-export const OrderSortIcon = styled.span<OrderIconParams>`
+export const OrderIcon = styled.span<OrderIconParams>`
   display: flex;
   align-items: center;
   color: ${(params) => params.active && '#3284fc'};
 `;
 
-export const FilterIcon = styled.span`
+interface FilterIconParams {
+  active: boolean;
+}
+
+export const FilterIcon = styled.span<FilterIconParams>`
   display: flex;
   align-items: center;
+  color: ${(params) => params.active && '#3284fc'};
 `;
 
 export const TableData = styled.td`

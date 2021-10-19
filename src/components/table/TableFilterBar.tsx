@@ -25,7 +25,6 @@ const TableFilterBar: React.FC<TableFilterBarProps> = ({
               onClick={() => onSelectFilter(filter)}
             >
               {filter.text}
-              {console.log('filterBar', filter)}
             </FilterButton>
           </FilterLi>
         ))}
