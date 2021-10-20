@@ -8,44 +8,22 @@ import {
   RaceList,
 } from 'utils/types/patient';
 
-const PATIENT_LIST_URL = '/api/patient/list';
-
-const GENDER_LIST_URL = '/api/gender/list';
-const RACE_LIST_URL = '/api/race/list';
-const ETHNICITY_LIST_URL = '/api/ethnicity/list';
-
-const PATIENT_BRIEF_URL = '/api/patient/brief';
-
-const PATIENT_STATS_URL = '/api/patient/stats';
-
 class PatientService {
   constructor(private httpClient: AxiosInstance) {}
 
-  getPatientList = (
+  getPatientList = ({
     page = 1,
     length = 10,
     order_desc = false,
-    order_column?: string,
-  ): Promise<AxiosResponse<PatientList>> => {
-    type Params = {
-      page: number;
-      length: number;
-      order_desc: boolean;
-      order_column?: string;
-    };
-
-    const params: Params = {
-      page,
-      length,
-      order_desc,
-    };
-
-    if (order_column) {
-      params.order_column = order_column;
-    }
-
+    ...rest
+  }: PatientListParams): Promise<AxiosResponse<PatientList>> => {
     return this.httpClient.get<PatientList>(PATIENT_LIST_URL, {
-      params,
+      params: {
+        page,
+        length,
+        order_desc,
+        ...rest,
+      },
     });
   };
 
@@ -75,3 +53,26 @@ class PatientService {
 }
 
 export default PatientService;
+
+const PATIENT_LIST_URL = '/api/patient/list';
+
+const GENDER_LIST_URL = '/api/gender/list';
+const RACE_LIST_URL = '/api/race/list';
+const ETHNICITY_LIST_URL = '/api/ethnicity/list';
+
+const PATIENT_BRIEF_URL = '/api/patient/brief';
+
+const PATIENT_STATS_URL = '/api/patient/stats';
+
+export interface PatientListParams {
+  page: number;
+  length: number;
+  order_column?: string;
+  order_desc: boolean;
+  gender?: string;
+  race?: string;
+  ethnicity?: string;
+  age_min?: number;
+  age_max?: number;
+  death?: boolean;
+}
