@@ -44,6 +44,20 @@ const PatientInfo: React.FC<PatientProps> = ({
           ? genderFilters
           : addSelectedInfo(genderFilters, filteredGender);
 
+        const filteredAge = findByColumnKey(filteredInfo, 'age');
+        const ageFilters: Filter[] = [
+          {
+            text: 'Range',
+            value: {
+              start: { placeholder: 'min', value: '' },
+              end: { placeholder: 'max', value: '' },
+            },
+          },
+        ];
+        const age = !filteredAge
+          ? ageFilters
+          : addChangedInfo(ageFilters, filteredAge);
+
         const filteredRace = findByColumnKey(filteredInfo, 'race');
         const raceFilters = makeFilters(raceList);
         const race = !filteredRace
@@ -57,7 +71,7 @@ const PatientInfo: React.FC<PatientProps> = ({
           : addSelectedInfo(ethnicityFilters, filteredEthnicity);
 
         const filteredDeath = findByColumnKey(filteredInfo, 'death');
-        const deathFilters = [
+        const deathFilters: Filter[] = [
           { text: 'T', value: true },
           { text: 'F', value: false },
         ];
@@ -67,6 +81,7 @@ const PatientInfo: React.FC<PatientProps> = ({
 
         setFilters({
           gender,
+          age,
           race,
           ethnicity,
           death,
@@ -86,6 +101,12 @@ const PatientInfo: React.FC<PatientProps> = ({
           order_column: sortedInfo.columnKey,
           order_desc: sortedInfo.order === 'desc' ? true : false,
           gender: filters?.gender.find((item) => item.selected)?.value,
+          age_min: filters?.age.find((item) => item.changed)?.value.start.value
+            ? filters?.age.find((item) => item.changed)?.value.start.value
+            : null,
+          age_max: filters?.age.find((item) => item.changed)?.value.end.value
+            ? filters?.age.find((item) => item.changed)?.value.end.value
+            : null,
           race: filters?.race.find((item) => item.selected)?.value,
           ethnicity: filters?.ethnicity.find((item) => item.selected)?.value,
           death: filters?.death.find((item) => item.selected)?.value,
@@ -120,6 +141,7 @@ const PatientInfo: React.FC<PatientProps> = ({
             title: '나이',
             dataIndex: 'age',
             key: 'age',
+            filters: filters?.age,
           },
           {
             title: '인종',
@@ -228,10 +250,7 @@ type Columns = {
 };
 
 type Filters = {
-  gender: Filter[];
-  race: Filter[];
-  ethnicity: Filter[];
-  death: Filter[];
+  [key: string]: Filter[];
 };
 
 const findByColumnKey = (filteredInfo: FilteredInfo[], columnKey: string) => {
@@ -250,5 +269,13 @@ const addSelectedInfo = (filters: Filter[], filtered: FilteredInfo) => {
     ...filter,
     selected:
       filtered?.filter.value === filter.value && filtered?.filter.selected,
+  }));
+};
+
+const addChangedInfo = (filters: Filter[], filtered: FilteredInfo) => {
+  return filters.map((filter) => ({
+    ...filter,
+    changed: filtered.filter.changed,
+    value: filtered.filter.changed ? filtered.filter.value : filter.value,
   }));
 };
