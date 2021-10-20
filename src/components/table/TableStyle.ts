@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const TableContainer = styled.div`
-  width: 800px;
+  min-width: 800px;
   display: flex;
   flex-direction: column;
   background-color: #fff;

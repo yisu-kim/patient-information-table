@@ -15,15 +15,28 @@ export const FilterLi = styled.li`
   margin-right: 8px;
 `;
 
+const Button = styled.button`
+  border-radius: 3px;
+  padding: 5px 10px;
+  min-with: 48px;
+`;
+
 interface FilterButtonProps {
   active: boolean;
 }
 
-export const FilterButton = styled.button<FilterButtonProps>`
+export const FilterButton = styled(Button)<FilterButtonProps>`
   background-color: #fff;
   border: 1px solid ${(props) => (props.active ? '#3284fc' : '#d9d9d9')};
   color: ${(props) => (props.active ? '#3284fc' : '#000')};
-  border-radius: 3px;
-  padding: 5px 10px;
-  min-width: 48px;
+`;
+
+export const FilterInputPrepend = styled.span`
+  margin-right: 8px;
+`;
+
+export const FilterSubmitButton = styled(Button)`
+  background-color: #3284fc;
+  color: #fff;
+  margin-left: 8px;
 `;

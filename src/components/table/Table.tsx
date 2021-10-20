@@ -73,20 +73,24 @@ const Table: React.FC<TableProps> = ({
       ...currentFilters,
       filters: newFilters.map((item) =>
         item.value === filter.value
-          ? {
-              ...item,
-              selected: !filter.selected,
-            }
-          : {
-              ...item,
-              selected: false,
-            },
+          ? { ...item, selected: !filter.selected }
+          : { ...item, selected: false },
       ),
     }));
 
     onFilter({
       columnKey: currentFilters.columnKey,
       filter: { ...filter, selected: !filter.selected },
+    });
+  };
+
+  const handleRangeFilter = (filter: Filter) => {
+    onFilter({
+      columnKey: currentFilters.columnKey,
+      filter: {
+        ...filter,
+        changed: filter.value.start.value || filter.value.end.value,
+      },
     });
   };
 
@@ -127,7 +131,7 @@ const Table: React.FC<TableProps> = ({
                     {column.filters && (
                       <FilterIcon
                         active={column.filters.some(
-                          (filter) => filter.selected,
+                          (filter) => filter.selected || filter.changed,
                         )}
                       >
                         <FilterFilled />
@@ -144,6 +148,7 @@ const Table: React.FC<TableProps> = ({
                 <TableFilterBar
                   filters={currentFilters.filters}
                   onSelectFilter={handleSelectFilter}
+                  onRangeFilter={handleRangeFilter}
                 />
               </TableHeader>
             </TableRow>
