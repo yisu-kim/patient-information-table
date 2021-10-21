@@ -19,6 +19,7 @@ import {
   TableHeaderIcon,
   TableHeaderTitle,
   TableRow,
+  TableSubRow,
 } from './TableStyle';
 
 export type SortOrder = false | 'asc' | 'desc';
@@ -140,7 +141,7 @@ const Table: React.FC<TableProps> = ({
             ))}
           </TableRow>
           {isFilterBarOpen && (
-            <TableRow>
+            <TableSubRow>
               <TableHeader colSpan={7}>
                 <TableFilterBar
                   filters={currentFilters.filters}
@@ -148,7 +149,7 @@ const Table: React.FC<TableProps> = ({
                   onRangeFilter={handleRangeFilter}
                 />
               </TableHeader>
-            </TableRow>
+            </TableSubRow>
           )}
         </TableHeaderGroup>
         <tbody>

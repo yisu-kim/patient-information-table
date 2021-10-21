@@ -21,6 +21,13 @@ export const TableRow = styled.tr`
   border-bottom: 1px solid #f1f1f2;
 `;
 
+export const TableSubRow = styled(TableRow)`
+  border: unset;
+  background-color: #fafafa;
+  box-shadow: inset 0px 10px 8px -10px rgba(0, 0, 0, 0.2),
+    inset 0px -10px 8px -10px rgba(0, 0, 0, 0.2);
+`;
+
 export const TableHeader = styled.th`
   padding: 0 16px;
   vertical-align: middle;
