@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
   CaretDownOutlined,
   CaretUpOutlined,
+  DownOutlined,
   FilterFilled,
+  RightOutlined,
 } from '@ant-design/icons';
 import TableFilterBar, { Filter } from './TableFilterBar';
 import TablePagination from './TablePagination';
 import {
+  Detail,
+  DetailShowIcon,
+  DetailTitle,
   FilterIcon,
   OrderIcon,
   SortIcon,
@@ -19,6 +24,7 @@ import {
   TableHeaderIcon,
   TableHeaderTitle,
   TableRow,
+  TableSubRow,
 } from './TableStyle';
 
 export type SortOrder = false | 'asc' | 'desc';
@@ -34,6 +40,8 @@ interface TableProps {
   onSort: ({ order, columnKey, columnDataIndex }: SortedInfo) => void;
   onFilter: ({ columnKey, filter }: FilteredInfo) => void;
   dataSource?: any[];
+  detailInfo?: DetailInfo[];
+  onShowDetail: (rowIndex: number) => void;
   pagination: {
     currentPage: number;
     total: number;
@@ -48,6 +56,8 @@ const Table: React.FC<TableProps> = ({
   onSort,
   onFilter,
   dataSource = [],
+  detailInfo,
+  onShowDetail,
   pagination,
 }: TableProps) => {
   const [isFilterBarOpen, setIsFilterBarOpen] = useState(false);
@@ -55,6 +65,8 @@ const Table: React.FC<TableProps> = ({
     columnKey: '',
     filters: [],
   });
+  const [isDetailRowOpen, setIsDetailRowOpen] = useState(false);
+  const [detailRowIndex, setDetailRowIndex] = useState(-1);
 
   const handleFilterBar = (columnKey: string, filters?: Filter[]) => {
     if (columnKey !== currentFilters.columnKey) {
@@ -91,11 +103,23 @@ const Table: React.FC<TableProps> = ({
     });
   };
 
+  const handleDataDetail = (index: number) => {
+    if (detailRowIndex > -1 && detailRowIndex === index) {
+      setIsDetailRowOpen(false);
+      return;
+    }
+    setDetailRowIndex(index);
+    setIsDetailRowOpen(true);
+
+    onShowDetail(index);
+  };
+
   return (
     <TableContainer>
       <TableContents>
         <TableHeaderGroup>
           <TableRow>
+            <TableHeader></TableHeader>
             {columns.map((column) => (
               <TableHeader key={column.dataIndex}>
                 <TableHeaderContainer>
@@ -140,24 +164,50 @@ const Table: React.FC<TableProps> = ({
             ))}
           </TableRow>
           {isFilterBarOpen && (
-            <TableRow>
-              <TableHeader colSpan={7}>
+            <TableSubRow>
+              <TableHeader colSpan={columns.length + 1}>
                 <TableFilterBar
                   filters={currentFilters.filters}
                   onSelectFilter={handleSelectFilter}
                   onRangeFilter={handleRangeFilter}
                 />
               </TableHeader>
-            </TableRow>
+            </TableSubRow>
           )}
         </TableHeaderGroup>
         <tbody>
           {dataSource.map((data, index) => (
-            <TableRow key={index}>
-              {columns.map((column) => (
-                <TableData key={column.key}>{data[column.dataIndex]}</TableData>
-              ))}
-            </TableRow>
+            <Fragment key={index}>
+              <TableRow>
+                <TableData onClick={() => handleDataDetail(index)}>
+                  <DetailShowIcon>
+                    {isDetailRowOpen && detailRowIndex === index ? (
+                      <DownOutlined />
+                    ) : (
+                      <RightOutlined />
+                    )}
+                  </DetailShowIcon>
+                </TableData>
+                {columns.map((column) => (
+                  <TableData key={column.key}>
+                    {data[column.dataIndex]}
+                  </TableData>
+                ))}
+              </TableRow>
+              {isDetailRowOpen && detailRowIndex === index && (
+                <TableSubRow>
+                  <TableData colSpan={columns.length + 1}>
+                    {detailInfo?.map((detail) => (
+                      <Detail key={detail.title}>
+                        <DetailTitle>{detail.title}</DetailTitle>
+                        <br />
+                        <span>{detail.text}</span>
+                      </Detail>
+                    ))}
+                  </TableData>
+                </TableSubRow>
+              )}
+            </Fragment>
           ))}
         </tbody>
       </TableContents>
@@ -188,4 +238,9 @@ export type FilteredInfo = {
 type CurrentFilters = {
   columnKey: string;
   filters: Filter[];
+};
+
+export type DetailInfo = {
+  title: string;
+  text: string;
 };

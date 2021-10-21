@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const TableContainer = styled.div`
   min-width: 800px;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -19,6 +20,13 @@ export const TableHeaderGroup = styled.thead`
 export const TableRow = styled.tr`
   height: 40px;
   border-bottom: 1px solid #f1f1f2;
+`;
+
+export const TableSubRow = styled(TableRow)`
+  border: unset;
+  background-color: #fafafa;
+  box-shadow: inset 0px 10px 8px -10px rgba(0, 0, 0, 0.2),
+    inset 0px -10px 8px -10px rgba(0, 0, 0, 0.2);
 `;
 
 export const TableHeader = styled.th`
@@ -78,4 +86,21 @@ export const FilterIcon = styled.span<FilterIconParams>`
 export const TableData = styled.td`
   padding: 0 16px;
   vertical-align: middle;
+`;
+
+export const DetailShowIcon = styled.span`
+  font-size: 12px;
+  color: #bfbfbf;
+`;
+
+export const Detail = styled.p`
+  margin: 16px;
+  word-break: break-all;
+`;
+
+export const DetailTitle = styled.span`
+  display: inline-block;
+  margin-bottom: 4px;
+  font-weight: bold;
+  color: #aeaeae;
 `;
