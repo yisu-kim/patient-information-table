@@ -30,13 +30,7 @@ import {
 export type SortOrder = false | 'asc' | 'desc';
 
 interface TableProps {
-  columns: {
-    title: string;
-    dataIndex: string;
-    key: string;
-    sortOrder?: SortOrder;
-    filters?: Filter[];
-  }[];
+  columns: Column[];
   onSort: ({ order, columnKey, columnDataIndex }: SortedInfo) => void;
   onFilter: ({ columnKey, filter }: FilteredInfo) => void;
   dataSource?: any[];
@@ -68,6 +62,16 @@ const Table: React.FC<TableProps> = ({
   const [isDetailRowOpen, setIsDetailRowOpen] = useState(false);
   const [detailRowIndex, setDetailRowIndex] = useState(-1);
 
+  const handleSort = (column: Column) => {
+    initDataDetail();
+
+    onSort({
+      order: column.sortOrder ? column.sortOrder : false,
+      columnKey: column.key,
+      columnDataIndex: column.dataIndex,
+    });
+  };
+
   const handleFilterBar = (columnKey: string, filters?: Filter[]) => {
     if (columnKey !== currentFilters.columnKey) {
       setCurrentFilters({ columnKey, filters: filters! });
@@ -80,6 +84,8 @@ const Table: React.FC<TableProps> = ({
   };
 
   const handleSelectFilter = (filter: Filter) => {
+    initDataDetail();
+
     const newFilters = [...currentFilters.filters];
     setCurrentFilters((currentFilters) => ({
       ...currentFilters,
@@ -97,15 +103,22 @@ const Table: React.FC<TableProps> = ({
   };
 
   const handleRangeFilter = (filter: Filter) => {
+    initDataDetail();
+
     onFilter({
       columnKey: currentFilters.columnKey,
       filter,
     });
   };
 
+  const initDataDetail = () => {
+    setDetailRowIndex(-1);
+    setIsDetailRowOpen(false);
+  };
+
   const handleDataDetail = (index: number) => {
     if (detailRowIndex > -1 && detailRowIndex === index) {
-      setIsDetailRowOpen(false);
+      initDataDetail();
       return;
     }
     setDetailRowIndex(index);
@@ -123,15 +136,7 @@ const Table: React.FC<TableProps> = ({
             {columns.map((column) => (
               <TableHeader key={column.dataIndex}>
                 <TableHeaderContainer>
-                  <TableHeaderTitle
-                    onClick={() =>
-                      onSort({
-                        order: column.sortOrder ? column.sortOrder : false,
-                        columnKey: column.key,
-                        columnDataIndex: column.dataIndex,
-                      })
-                    }
-                  >
+                  <TableHeaderTitle onClick={() => handleSort(column)}>
                     {column.title}
                     <TableHeaderIcon>
                       {column.sortOrder !== undefined && (
@@ -223,6 +228,14 @@ const Table: React.FC<TableProps> = ({
 };
 
 export default Table;
+
+export type Column = {
+  title: string;
+  dataIndex: string;
+  key: string;
+  sortOrder?: SortOrder;
+  filters?: Filter[];
+};
 
 export type SortedInfo = {
   order: SortOrder;
