@@ -19,7 +19,10 @@ const TableFilterBar: React.FC<TableFilterBarProps> = ({
   onSelectFilter,
   onRangeFilter,
 }: TableFilterBarProps) => {
-  const [range, setRange] = useState<Range>({ start: '', end: '' });
+  const [range, setRange] = useState<Range>({
+    start: undefined,
+    end: undefined,
+  });
 
   const handleRangeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRange({ ...range, [e.target.name]: e.target.value });
@@ -28,18 +31,19 @@ const TableFilterBar: React.FC<TableFilterBarProps> = ({
   const handleRangeSubmit = (e: SyntheticEvent, filter: Filter) => {
     e.preventDefault();
 
+    const start = {
+      ...filter.value.start,
+      value: range.start !== undefined ? range.start : filter.value.start.value,
+    };
+    const end = {
+      ...filter.value.end,
+      value: range.end !== undefined ? range.end : filter.value.end.value,
+    };
+
     onRangeFilter({
       ...filter,
-      value: {
-        start: {
-          ...filter.value.start,
-          value: range.start ? range.start : filter.value.start.value,
-        },
-        end: {
-          ...filter.value.end,
-          value: range.end ? range.end : filter.value.end.value,
-        },
-      },
+      value: { start, end },
+      hasRange: start.value || end.value ? true : false,
     });
   };
 
@@ -94,9 +98,9 @@ export type Filter = {
   text: string;
   value: any;
   selected?: boolean;
-  changed?: boolean;
+  hasRange?: boolean;
 };
 
 type Range = {
-  [key: string]: string;
+  [key: string]: string | undefined;
 };
