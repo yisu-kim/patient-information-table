@@ -87,10 +87,7 @@ const Table: React.FC<TableProps> = ({
   const handleRangeFilter = (filter: Filter) => {
     onFilter({
       columnKey: currentFilters.columnKey,
-      filter: {
-        ...filter,
-        changed: filter.value.start.value || filter.value.end.value,
-      },
+      filter,
     });
   };
 
@@ -131,7 +128,7 @@ const Table: React.FC<TableProps> = ({
                     {column.filters && (
                       <FilterIcon
                         active={column.filters.some(
-                          (filter) => filter.selected || filter.changed,
+                          (filter) => filter.selected || filter.hasRange,
                         )}
                       >
                         <FilterFilled />
