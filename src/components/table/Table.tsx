@@ -9,7 +9,9 @@ import {
 import TableFilterBar, { Filter } from './TableFilterBar';
 import TablePagination from './TablePagination';
 import {
+  Detail,
   DetailShowIcon,
+  DetailTitle,
   FilterIcon,
   OrderIcon,
   SortIcon,
@@ -38,6 +40,8 @@ interface TableProps {
   onSort: ({ order, columnKey, columnDataIndex }: SortedInfo) => void;
   onFilter: ({ columnKey, filter }: FilteredInfo) => void;
   dataSource?: any[];
+  detailInfo?: DetailInfo[];
+  onShowDetail: (rowIndex: number) => void;
   pagination: {
     currentPage: number;
     total: number;
@@ -52,6 +56,8 @@ const Table: React.FC<TableProps> = ({
   onSort,
   onFilter,
   dataSource = [],
+  detailInfo,
+  onShowDetail,
   pagination,
 }: TableProps) => {
   const [isFilterBarOpen, setIsFilterBarOpen] = useState(false);
@@ -104,6 +110,8 @@ const Table: React.FC<TableProps> = ({
     }
     setDetailRowIndex(index);
     setIsDetailRowOpen(true);
+
+    onShowDetail(index);
   };
 
   return (
@@ -188,7 +196,15 @@ const Table: React.FC<TableProps> = ({
               </TableRow>
               {isDetailRowOpen && detailRowIndex === index && (
                 <TableSubRow>
-                  <TableData colSpan={columns.length + 1}>{'디테일'}</TableData>
+                  <TableData colSpan={columns.length + 1}>
+                    {detailInfo?.map((detail) => (
+                      <Detail key={detail.title}>
+                        <DetailTitle>{detail.title}</DetailTitle>
+                        <br />
+                        <span>{detail.text}</span>
+                      </Detail>
+                    ))}
+                  </TableData>
                 </TableSubRow>
               )}
             </Fragment>
@@ -222,4 +238,9 @@ export type FilteredInfo = {
 type CurrentFilters = {
   columnKey: string;
   filters: Filter[];
+};
+
+export type DetailInfo = {
+  title: string;
+  text: string;
 };

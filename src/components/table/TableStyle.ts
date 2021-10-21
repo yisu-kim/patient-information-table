@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const TableContainer = styled.div`
   min-width: 800px;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -90,4 +91,16 @@ export const TableData = styled.td`
 export const DetailShowIcon = styled.span`
   font-size: 12px;
   color: #bfbfbf;
+`;
+
+export const Detail = styled.p`
+  margin: 16px;
+  word-break: break-all;
+`;
+
+export const DetailTitle = styled.span`
+  display: inline-block;
+  margin-bottom: 4px;
+  font-weight: bold;
+  color: #aeaeae;
 `;

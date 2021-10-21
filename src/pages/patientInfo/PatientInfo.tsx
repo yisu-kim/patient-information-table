@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import PatientService, { PatientListParams } from 'services/patient';
-import { PatientList } from 'utils/types/patient';
+import { PatientBrief, PatientList } from 'utils/types/patient';
 import Table from 'components/table';
-import { FilteredInfo, SortedInfo, SortOrder } from 'components/table/Table';
+import {
+  DetailInfo,
+  FilteredInfo,
+  SortedInfo,
+  SortOrder,
+} from 'components/table/Table';
 import { Container } from './PatientInfoStyle';
 import { Filter } from 'components/table/TableFilterBar';
 
@@ -24,6 +29,7 @@ const PatientInfo: React.FC<PatientProps> = ({
   const [filteredInfo, setFilteredInfo] = useState<FilteredInfo[]>([]);
   const [filters, setFilters] = useState<Filters>();
   const [columns, setColumns] = useState<Columns[]>([]);
+  const [brief, setBrief] = useState<DetailInfo[]>([]);
 
   useEffect(() => {
     try {
@@ -215,6 +221,26 @@ const PatientInfo: React.FC<PatientProps> = ({
     });
   };
 
+  const handleDetailRow = (index: number) => {
+    (async () => {
+      try {
+        const {
+          data: { conditionList, visitCount },
+        } = await patientService.getPatientBrief(
+          (data as PatientList['patient']).list[index].personID,
+        );
+
+        const brief = [
+          { title: '전체 방문 수', text: visitCount.toString() },
+          { title: '진단 정보', text: conditionList.join(', ') },
+        ];
+        setBrief(brief);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
+
   return (
     <Container>
       {data && (
@@ -226,6 +252,8 @@ const PatientInfo: React.FC<PatientProps> = ({
             ...patient,
             isDeath: patient.isDeath ? 'T' : 'F',
           }))}
+          detailInfo={brief}
+          onShowDetail={handleDetailRow}
           pagination={{
             currentPage: data.page,
             total: data.totalLength,
