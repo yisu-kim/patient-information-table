@@ -86,3 +86,8 @@ export const TableData = styled.td`
   padding: 0 16px;
   vertical-align: middle;
 `;
+
+export const DetailShowIcon = styled.span`
+  font-size: 12px;
+  color: #bfbfbf;
+`;

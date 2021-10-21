@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
   CaretDownOutlined,
   CaretUpOutlined,
+  DownOutlined,
   FilterFilled,
+  RightOutlined,
 } from '@ant-design/icons';
 import TableFilterBar, { Filter } from './TableFilterBar';
 import TablePagination from './TablePagination';
 import {
+  DetailShowIcon,
   FilterIcon,
   OrderIcon,
   SortIcon,
@@ -56,6 +59,8 @@ const Table: React.FC<TableProps> = ({
     columnKey: '',
     filters: [],
   });
+  const [isDetailRowOpen, setIsDetailRowOpen] = useState(false);
+  const [detailRowIndex, setDetailRowIndex] = useState(-1);
 
   const handleFilterBar = (columnKey: string, filters?: Filter[]) => {
     if (columnKey !== currentFilters.columnKey) {
@@ -92,11 +97,21 @@ const Table: React.FC<TableProps> = ({
     });
   };
 
+  const handleDataDetail = (index: number) => {
+    if (detailRowIndex > -1 && detailRowIndex === index) {
+      setIsDetailRowOpen(false);
+      return;
+    }
+    setDetailRowIndex(index);
+    setIsDetailRowOpen(true);
+  };
+
   return (
     <TableContainer>
       <TableContents>
         <TableHeaderGroup>
           <TableRow>
+            <TableHeader></TableHeader>
             {columns.map((column) => (
               <TableHeader key={column.dataIndex}>
                 <TableHeaderContainer>
@@ -142,7 +157,7 @@ const Table: React.FC<TableProps> = ({
           </TableRow>
           {isFilterBarOpen && (
             <TableSubRow>
-              <TableHeader colSpan={7}>
+              <TableHeader colSpan={columns.length + 1}>
                 <TableFilterBar
                   filters={currentFilters.filters}
                   onSelectFilter={handleSelectFilter}
@@ -154,11 +169,29 @@ const Table: React.FC<TableProps> = ({
         </TableHeaderGroup>
         <tbody>
           {dataSource.map((data, index) => (
-            <TableRow key={index}>
-              {columns.map((column) => (
-                <TableData key={column.key}>{data[column.dataIndex]}</TableData>
-              ))}
-            </TableRow>
+            <Fragment key={index}>
+              <TableRow>
+                <TableData onClick={() => handleDataDetail(index)}>
+                  <DetailShowIcon>
+                    {isDetailRowOpen && detailRowIndex === index ? (
+                      <DownOutlined />
+                    ) : (
+                      <RightOutlined />
+                    )}
+                  </DetailShowIcon>
+                </TableData>
+                {columns.map((column) => (
+                  <TableData key={column.key}>
+                    {data[column.dataIndex]}
+                  </TableData>
+                ))}
+              </TableRow>
+              {isDetailRowOpen && detailRowIndex === index && (
+                <TableSubRow>
+                  <TableData colSpan={columns.length + 1}>{'디테일'}</TableData>
+                </TableSubRow>
+              )}
+            </Fragment>
           ))}
         </tbody>
       </TableContents>
