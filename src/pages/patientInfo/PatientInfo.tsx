@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import PatientService, { PatientListParams } from 'services/patient';
-import { PatientBrief, PatientList } from 'utils/types/patient';
+import { PatientList } from 'utils/types/patient';
 import Table from 'components/table';
 import {
+  Column,
   DetailInfo,
   FilteredInfo,
   SortedInfo,
-  SortOrder,
 } from 'components/table/Table';
 import { Container } from './PatientInfoStyle';
 import { Filter } from 'components/table/TableFilterBar';
@@ -28,7 +28,7 @@ const PatientInfo: React.FC<PatientProps> = ({
   });
   const [filteredInfo, setFilteredInfo] = useState<FilteredInfo[]>([]);
   const [filters, setFilters] = useState<Filters>();
-  const [columns, setColumns] = useState<Columns[]>([]);
+  const [columns, setColumns] = useState<Column[]>([]);
   const [brief, setBrief] = useState<DetailInfo[]>([]);
 
   useEffect(() => {
@@ -268,14 +268,6 @@ const PatientInfo: React.FC<PatientProps> = ({
 };
 
 export default PatientInfo;
-
-type Columns = {
-  title: string;
-  dataIndex: string;
-  key: string;
-  sortOrder?: SortOrder;
-  filters?: Filter[];
-};
 
 type Filters = {
   [key: string]: Filter[];
