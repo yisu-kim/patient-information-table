@@ -19,6 +19,9 @@ export const TableHeaderGroup = styled.thead`
 export const TableRow = styled.tr`
   height: 40px;
   border-bottom: 1px solid #f1f1f2;
+  tbody &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
 `;
 
 export const TableSubRow = styled(TableRow)`
