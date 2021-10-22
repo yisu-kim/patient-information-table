@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, MouseEvent, useState } from 'react';
 import {
   CaretDownOutlined,
   CaretUpOutlined,
@@ -72,7 +72,13 @@ const Table: React.FC<TableProps> = ({
     });
   };
 
-  const handleFilterBar = (columnKey: string, filters?: Filter[]) => {
+  const handleFilterBar = (
+    e: MouseEvent<HTMLDivElement>,
+    columnKey: string,
+    filters?: Filter[],
+  ) => {
+    e.stopPropagation();
+
     if (columnKey !== currentFilters.columnKey) {
       setCurrentFilters({ columnKey, filters: filters! });
       setIsFilterBarOpen(true);
@@ -156,7 +162,9 @@ const Table: React.FC<TableProps> = ({
                     </TableHeaderIcon>
                   </TableHeaderTitle>
                   <TableHeaderIcon
-                    onClick={() => handleFilterBar(column.key, column.filters)}
+                    onClick={(e) =>
+                      handleFilterBar(e, column.key, column.filters)
+                    }
                   >
                     {column.filters && (
                       <FilterIcon
