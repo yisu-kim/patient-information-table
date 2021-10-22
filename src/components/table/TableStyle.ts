@@ -97,14 +97,22 @@ export const FilterIcon = styled.span<FilterIconParams>`
   }
 `;
 
-export const TableData = styled.td`
+interface TableDataParams {
+  hasAction?: boolean;
+}
+
+export const TableData = styled.td<TableDataParams>`
   padding: 0 16px;
   vertical-align: middle;
+  ${(params) => params.hasAction && 'cursor: pointer;'};
 `;
 
 export const DetailShowIcon = styled.span`
   font-size: 12px;
   color: #bfbfbf;
+  ${TableData}:hover & {
+    color: rgba(0, 0, 0, 0.45);
+  }
 `;
 
 export const Detail = styled.p`

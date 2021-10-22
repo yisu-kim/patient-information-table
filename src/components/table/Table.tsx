@@ -188,7 +188,10 @@ const Table: React.FC<TableProps> = ({
           {dataSource.map((data, index) => (
             <Fragment key={index}>
               <TableRow>
-                <TableData onClick={() => handleDataDetail(index)}>
+                <TableData
+                  hasAction={true}
+                  onClick={() => handleDataDetail(index)}
+                >
                   <DetailShowIcon>
                     {isDetailRowOpen && detailRowIndex === index ? (
                       <DownOutlined />
