@@ -134,9 +134,13 @@ const Table: React.FC<TableProps> = ({
           <TableRow>
             <TableHeader></TableHeader>
             {columns.map((column) => (
-              <TableHeader key={column.dataIndex}>
+              <TableHeader
+                key={column.dataIndex}
+                hasSortOrder={'sortOrder' in column}
+                onClick={() => handleSort(column)}
+              >
                 <TableHeaderContainer>
-                  <TableHeaderTitle onClick={() => handleSort(column)}>
+                  <TableHeaderTitle>
                     {column.title}
                     <TableHeaderIcon>
                       {column.sortOrder !== undefined && (
