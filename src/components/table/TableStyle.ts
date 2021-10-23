@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-x: auto;
   background-color: #fff;
   border-radius: 4px;
 `;
@@ -34,6 +33,12 @@ interface TableHeaderParams {
 }
 
 export const TableHeader = styled.th<TableHeaderParams>`
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #fafafa;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
   padding: 0 16px;
   vertical-align: middle;
   ${(params) => params.hasSortOrder && 'cursor: pointer;'};

@@ -243,26 +243,28 @@ const PatientInfo: React.FC<PatientProps> = ({
 
   return (
     <Container>
-      {data && (
-        <Table
-          columns={columns}
-          onFilter={handleColumnFilter}
-          onSort={handleColumnSort}
-          dataSource={data.list.map((patient) => ({
-            ...patient,
-            isDeath: patient.isDeath ? 'T' : 'F',
-          }))}
-          detailInfo={brief}
-          onShowDetail={handleDetailRow}
-          pagination={{
-            currentPage: data.page,
-            total: data.totalLength,
-            rowsPerPage,
-            handlePageClick,
-            handleRowsPerPageChange,
-          }}
-        />
-      )}
+      <section>
+        {data && (
+          <Table
+            columns={columns}
+            onFilter={handleColumnFilter}
+            onSort={handleColumnSort}
+            dataSource={data.list.map((patient) => ({
+              ...patient,
+              isDeath: patient.isDeath ? 'T' : 'F',
+            }))}
+            detailInfo={brief}
+            onShowDetail={handleDetailRow}
+            pagination={{
+              currentPage: data.page,
+              total: data.totalLength,
+              rowsPerPage,
+              handlePageClick,
+              handleRowsPerPageChange,
+            }}
+          />
+        )}
+      </section>
     </Container>
   );
 };
