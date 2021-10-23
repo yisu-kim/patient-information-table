@@ -1,13 +1,11 @@
 import styled from 'styled-components';
 
 export const TableContainer = styled.div`
-  min-width: 800px;
-  max-width: 1200px;
   display: flex;
   flex-direction: column;
+  overflow-x: auto;
   background-color: #fff;
   border-radius: 4px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 `;
 
 export const TableContents = styled.table``;
