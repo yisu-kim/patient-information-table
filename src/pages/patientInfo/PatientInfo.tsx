@@ -142,12 +142,14 @@ const PatientInfo: React.FC<PatientProps> = ({
             dataIndex: 'birthDatetime',
             key: 'birth',
             sortOrder: sortedInfo.columnKey === 'birth' && sortedInfo.order,
+            align: 'left',
           },
           {
             title: '나이',
             dataIndex: 'age',
             key: 'age',
             filters: filters?.age,
+            align: 'right',
           },
           {
             title: '인종',
@@ -169,6 +171,7 @@ const PatientInfo: React.FC<PatientProps> = ({
             key: 'death',
             sortOrder: sortedInfo.columnKey === 'death' && sortedInfo.order,
             filters: filters?.death,
+            align: 'center',
           },
         ]);
       } catch (error) {
@@ -243,26 +246,29 @@ const PatientInfo: React.FC<PatientProps> = ({
 
   return (
     <Container>
-      {data && (
-        <Table
-          columns={columns}
-          onFilter={handleColumnFilter}
-          onSort={handleColumnSort}
-          dataSource={data.list.map((patient) => ({
-            ...patient,
-            isDeath: patient.isDeath ? 'T' : 'F',
-          }))}
-          detailInfo={brief}
-          onShowDetail={handleDetailRow}
-          pagination={{
-            currentPage: data.page,
-            total: data.totalLength,
-            rowsPerPage,
-            handlePageClick,
-            handleRowsPerPageChange,
-          }}
-        />
-      )}
+      <section>
+        {data && (
+          <Table
+            columns={columns}
+            onFilter={handleColumnFilter}
+            onSort={handleColumnSort}
+            dataSource={data.list.map((patient) => ({
+              ...patient,
+              birthDatetime: fromStringToDate(patient.birthDatetime),
+              isDeath: patient.isDeath ? 'T' : 'F',
+            }))}
+            detailInfo={brief}
+            onShowDetail={handleDetailRow}
+            pagination={{
+              currentPage: data.page,
+              total: data.totalLength,
+              rowsPerPage,
+              handlePageClick,
+              handleRowsPerPageChange,
+            }}
+          />
+        )}
+      </section>
     </Container>
   );
 };
@@ -298,4 +304,8 @@ const addRangeInfo = (filters: Filter[], filtered: FilteredInfo) => {
     hasRange: filtered.filter.hasRange,
     value: filtered.filter.value,
   }));
+};
+
+const fromStringToDate = (dateStr: string) => {
+  return new Date(dateStr).toISOString().slice(0, 10);
 };

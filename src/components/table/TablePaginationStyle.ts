@@ -29,10 +29,14 @@ export const PageLi = styled.li<PageLiProps>`
   & > * {
     color: ${(props) => props.disabled && '#d9d9d9'};
   }
+  ${(props) => (props.disabled ? 'cursor: not-allowed;' : 'cursor: pointer;')};
 `;
 
 export const PageArrow = styled.button`
+  cursor: inherit;
   font-size: 11px;
 `;
 
-export const PageNumber = styled.button``;
+export const PageNumber = styled.button`
+  cursor: inherit;
+`;

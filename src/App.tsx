@@ -1,6 +1,7 @@
 import axios from 'axios';
 import PatientService from 'services/patient';
 import PatientInfo from 'pages/patientInfo';
+import { Container } from 'AppStyle';
 
 const httpClient = axios.create({
   baseURL: process.env.REACT_APP_PATIENT_API_BASE_URL,
@@ -8,7 +9,11 @@ const httpClient = axios.create({
 const patientService = new PatientService(httpClient);
 
 const App: React.FC = () => {
-  return <PatientInfo patientService={patientService} />;
+  return (
+    <Container>
+      <PatientInfo patientService={patientService} />
+    </Container>
+  );
 };
 
 export default App;

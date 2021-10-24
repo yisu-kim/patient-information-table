@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, MouseEvent, useState } from 'react';
 import {
   CaretDownOutlined,
   CaretUpOutlined,
   DownOutlined,
   FilterFilled,
+  InboxOutlined,
   RightOutlined,
 } from '@ant-design/icons';
 import TableFilterBar, { Filter } from './TableFilterBar';
@@ -13,6 +14,8 @@ import {
   DetailShowIcon,
   DetailTitle,
   FilterIcon,
+  NoData,
+  NoDataIcon,
   OrderIcon,
   SortIcon,
   TableContainer,
@@ -26,8 +29,6 @@ import {
   TableRow,
   TableSubRow,
 } from './TableStyle';
-
-export type SortOrder = false | 'asc' | 'desc';
 
 interface TableProps {
   columns: Column[];
@@ -72,7 +73,13 @@ const Table: React.FC<TableProps> = ({
     });
   };
 
-  const handleFilterBar = (columnKey: string, filters?: Filter[]) => {
+  const handleFilterBar = (
+    e: MouseEvent<HTMLDivElement>,
+    columnKey: string,
+    filters?: Filter[],
+  ) => {
+    e.stopPropagation();
+
     if (columnKey !== currentFilters.columnKey) {
       setCurrentFilters({ columnKey, filters: filters! });
       setIsFilterBarOpen(true);
@@ -134,9 +141,13 @@ const Table: React.FC<TableProps> = ({
           <TableRow>
             <TableHeader></TableHeader>
             {columns.map((column) => (
-              <TableHeader key={column.dataIndex}>
+              <TableHeader
+                key={column.dataIndex}
+                hasSortOrder={'sortOrder' in column}
+                onClick={() => handleSort(column)}
+              >
                 <TableHeaderContainer>
-                  <TableHeaderTitle onClick={() => handleSort(column)}>
+                  <TableHeaderTitle>
                     {column.title}
                     <TableHeaderIcon>
                       {column.sortOrder !== undefined && (
@@ -152,7 +163,9 @@ const Table: React.FC<TableProps> = ({
                     </TableHeaderIcon>
                   </TableHeaderTitle>
                   <TableHeaderIcon
-                    onClick={() => handleFilterBar(column.key, column.filters)}
+                    onClick={(e) =>
+                      handleFilterBar(e, column.key, column.filters)
+                    }
                   >
                     {column.filters && (
                       <FilterIcon
@@ -181,53 +194,73 @@ const Table: React.FC<TableProps> = ({
           )}
         </TableHeaderGroup>
         <tbody>
-          {dataSource.map((data, index) => (
-            <Fragment key={index}>
-              <TableRow>
-                <TableData onClick={() => handleDataDetail(index)}>
-                  <DetailShowIcon>
-                    {isDetailRowOpen && detailRowIndex === index ? (
-                      <DownOutlined />
-                    ) : (
-                      <RightOutlined />
-                    )}
-                  </DetailShowIcon>
-                </TableData>
-                {columns.map((column) => (
-                  <TableData key={column.key}>
-                    {data[column.dataIndex]}
+          {dataSource.length > 0 ? (
+            dataSource.map((data, index) => (
+              <Fragment key={index}>
+                <TableRow>
+                  <TableData
+                    hasAction={true}
+                    onClick={() => handleDataDetail(index)}
+                  >
+                    <DetailShowIcon>
+                      {isDetailRowOpen && detailRowIndex === index ? (
+                        <DownOutlined />
+                      ) : (
+                        <RightOutlined />
+                      )}
+                    </DetailShowIcon>
                   </TableData>
-                ))}
-              </TableRow>
-              {isDetailRowOpen && detailRowIndex === index && (
-                <TableSubRow>
-                  <TableData colSpan={columns.length + 1}>
-                    {detailInfo?.map((detail) => (
-                      <Detail key={detail.title}>
-                        <DetailTitle>{detail.title}</DetailTitle>
-                        <br />
-                        <span>{detail.text}</span>
-                      </Detail>
-                    ))}
-                  </TableData>
-                </TableSubRow>
-              )}
-            </Fragment>
-          ))}
+                  {columns.map((column) => (
+                    <TableData key={column.key} align={column.align}>
+                      {data[column.dataIndex]}
+                    </TableData>
+                  ))}
+                </TableRow>
+                {isDetailRowOpen && detailRowIndex === index && (
+                  <TableSubRow>
+                    <TableData colSpan={columns.length + 1}>
+                      {detailInfo?.map((detail) => (
+                        <Detail key={detail.title}>
+                          <DetailTitle>{detail.title}</DetailTitle>
+                          <br />
+                          <span>{detail.text}</span>
+                        </Detail>
+                      ))}
+                    </TableData>
+                  </TableSubRow>
+                )}
+              </Fragment>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={columns.length + 1}>
+                <NoData>
+                  <NoDataIcon>
+                    <InboxOutlined />
+                  </NoDataIcon>
+                  <p>No Data</p>
+                </NoData>
+              </td>
+            </tr>
+          )}
         </tbody>
       </TableContents>
-      <TablePagination
-        defaultCurrent={pagination.currentPage}
-        total={pagination.total}
-        rowsPerPage={pagination.rowsPerPage}
-        onPageClick={pagination.handlePageClick}
-        onRowsPerPageChange={pagination.handleRowsPerPageChange}
-      />
+      {dataSource.length > 0 && (
+        <TablePagination
+          defaultCurrent={pagination.currentPage}
+          total={pagination.total}
+          rowsPerPage={pagination.rowsPerPage}
+          onPageClick={pagination.handlePageClick}
+          onRowsPerPageChange={pagination.handleRowsPerPageChange}
+        />
+      )}
     </TableContainer>
   );
 };
 
 export default Table;
+
+export type SortOrder = false | 'asc' | 'desc';
 
 export type Column = {
   title: string;
@@ -235,6 +268,7 @@ export type Column = {
   key: string;
   sortOrder?: SortOrder;
   filters?: Filter[];
+  align?: 'left' | 'center' | 'right';
 };
 
 export type SortedInfo = {
