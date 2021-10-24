@@ -174,6 +174,8 @@ const PatientInfo: React.FC<PatientProps> = ({
             align: 'center',
           },
         ]);
+
+        setBrief([]);
       } catch (error) {
         console.log(error);
       }
