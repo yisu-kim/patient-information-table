@@ -133,3 +133,18 @@ export const DetailTitle = styled.span`
   font-weight: bold;
   color: #aeaeae;
 `;
+
+export const NoData = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  * {
+    color: #bfbfbf;
+  }
+`;
+
+export const NoDataIcon = styled.span`
+  font-size: 48px;
+  margin-bottom: 2px;
+`;

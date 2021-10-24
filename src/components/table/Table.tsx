@@ -4,6 +4,7 @@ import {
   CaretUpOutlined,
   DownOutlined,
   FilterFilled,
+  InboxOutlined,
   RightOutlined,
 } from '@ant-design/icons';
 import TableFilterBar, { Filter } from './TableFilterBar';
@@ -13,6 +14,8 @@ import {
   DetailShowIcon,
   DetailTitle,
   FilterIcon,
+  NoData,
+  NoDataIcon,
   OrderIcon,
   SortIcon,
   TableContainer,
@@ -191,51 +194,66 @@ const Table: React.FC<TableProps> = ({
           )}
         </TableHeaderGroup>
         <tbody>
-          {dataSource.map((data, index) => (
-            <Fragment key={index}>
-              <TableRow>
-                <TableData
-                  hasAction={true}
-                  onClick={() => handleDataDetail(index)}
-                >
-                  <DetailShowIcon>
-                    {isDetailRowOpen && detailRowIndex === index ? (
-                      <DownOutlined />
-                    ) : (
-                      <RightOutlined />
-                    )}
-                  </DetailShowIcon>
-                </TableData>
-                {columns.map((column) => (
-                  <TableData key={column.key} align={column.align}>
-                    {data[column.dataIndex]}
+          {dataSource.length > 0 ? (
+            dataSource.map((data, index) => (
+              <Fragment key={index}>
+                <TableRow>
+                  <TableData
+                    hasAction={true}
+                    onClick={() => handleDataDetail(index)}
+                  >
+                    <DetailShowIcon>
+                      {isDetailRowOpen && detailRowIndex === index ? (
+                        <DownOutlined />
+                      ) : (
+                        <RightOutlined />
+                      )}
+                    </DetailShowIcon>
                   </TableData>
-                ))}
-              </TableRow>
-              {isDetailRowOpen && detailRowIndex === index && (
-                <TableSubRow>
-                  <TableData colSpan={columns.length + 1}>
-                    {detailInfo?.map((detail) => (
-                      <Detail key={detail.title}>
-                        <DetailTitle>{detail.title}</DetailTitle>
-                        <br />
-                        <span>{detail.text}</span>
-                      </Detail>
-                    ))}
-                  </TableData>
-                </TableSubRow>
-              )}
-            </Fragment>
-          ))}
+                  {columns.map((column) => (
+                    <TableData key={column.key} align={column.align}>
+                      {data[column.dataIndex]}
+                    </TableData>
+                  ))}
+                </TableRow>
+                {isDetailRowOpen && detailRowIndex === index && (
+                  <TableSubRow>
+                    <TableData colSpan={columns.length + 1}>
+                      {detailInfo?.map((detail) => (
+                        <Detail key={detail.title}>
+                          <DetailTitle>{detail.title}</DetailTitle>
+                          <br />
+                          <span>{detail.text}</span>
+                        </Detail>
+                      ))}
+                    </TableData>
+                  </TableSubRow>
+                )}
+              </Fragment>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={columns.length + 1}>
+                <NoData>
+                  <NoDataIcon>
+                    <InboxOutlined />
+                  </NoDataIcon>
+                  <p>No Data</p>
+                </NoData>
+              </td>
+            </tr>
+          )}
         </tbody>
       </TableContents>
-      <TablePagination
-        defaultCurrent={pagination.currentPage}
-        total={pagination.total}
-        rowsPerPage={pagination.rowsPerPage}
-        onPageClick={pagination.handlePageClick}
-        onRowsPerPageChange={pagination.handleRowsPerPageChange}
-      />
+      {dataSource.length > 0 && (
+        <TablePagination
+          defaultCurrent={pagination.currentPage}
+          total={pagination.total}
+          rowsPerPage={pagination.rowsPerPage}
+          onPageClick={pagination.handlePageClick}
+          onRowsPerPageChange={pagination.handleRowsPerPageChange}
+        />
+      )}
     </TableContainer>
   );
 };
