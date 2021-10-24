@@ -92,6 +92,8 @@ const PatientInfo: React.FC<PatientProps> = ({
           ethnicity,
           death,
         });
+
+        setCurrentPage(1);
       })();
     } catch (error) {
       console.log(error);
