@@ -1,4 +1,4 @@
-import { Fragment, MouseEvent, useState } from 'react';
+import { Fragment, MouseEvent, useEffect, useState } from 'react';
 import {
   CaretDownOutlined,
   CaretUpOutlined,
@@ -64,8 +64,6 @@ const Table: React.FC<TableProps> = ({
   const [detailRowIndex, setDetailRowIndex] = useState(-1);
 
   const handleSort = (column: Column) => {
-    initDataDetail();
-
     onSort({
       order: column.sortOrder ? column.sortOrder : false,
       columnKey: column.key,
@@ -91,8 +89,6 @@ const Table: React.FC<TableProps> = ({
   };
 
   const handleSelectFilter = (filter: Filter) => {
-    initDataDetail();
-
     const newFilters = [...currentFilters.filters];
     setCurrentFilters((currentFilters) => ({
       ...currentFilters,
@@ -110,22 +106,16 @@ const Table: React.FC<TableProps> = ({
   };
 
   const handleRangeFilter = (filter: Filter) => {
-    initDataDetail();
-
     onFilter({
       columnKey: currentFilters.columnKey,
       filter,
     });
   };
 
-  const initDataDetail = () => {
-    setDetailRowIndex(-1);
-    setIsDetailRowOpen(false);
-  };
-
   const handleDataDetail = (index: number) => {
     if (detailRowIndex > -1 && detailRowIndex === index) {
-      initDataDetail();
+      setDetailRowIndex(-1);
+      setIsDetailRowOpen(false);
       return;
     }
     setDetailRowIndex(index);
@@ -133,6 +123,14 @@ const Table: React.FC<TableProps> = ({
 
     onShowDetail(index);
   };
+
+  useEffect(() => {
+    if (detailInfo && detailInfo.length > 0) {
+      return;
+    }
+    setDetailRowIndex(-1);
+    setIsDetailRowOpen(false);
+  }, [dataSource, detailInfo]);
 
   return (
     <TableContainer>
