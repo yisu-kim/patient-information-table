@@ -111,6 +111,7 @@ export const TableData = styled.td<TableDataParams>`
   padding: 0 16px;
   vertical-align: middle;
   ${(params) => params.hasAction && 'cursor: pointer;'};
+  ${(params) => params.align && `text-align: ${params.align}`}
 `;
 
 export const DetailShowIcon = styled.span`

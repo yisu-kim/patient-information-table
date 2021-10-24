@@ -27,8 +27,6 @@ import {
   TableSubRow,
 } from './TableStyle';
 
-export type SortOrder = false | 'asc' | 'desc';
-
 interface TableProps {
   columns: Column[];
   onSort: ({ order, columnKey, columnDataIndex }: SortedInfo) => void;
@@ -209,7 +207,7 @@ const Table: React.FC<TableProps> = ({
                   </DetailShowIcon>
                 </TableData>
                 {columns.map((column) => (
-                  <TableData key={column.key}>
+                  <TableData key={column.key} align={column.align}>
                     {data[column.dataIndex]}
                   </TableData>
                 ))}
@@ -244,12 +242,15 @@ const Table: React.FC<TableProps> = ({
 
 export default Table;
 
+export type SortOrder = false | 'asc' | 'desc';
+
 export type Column = {
   title: string;
   dataIndex: string;
   key: string;
   sortOrder?: SortOrder;
   filters?: Filter[];
+  align?: 'left' | 'center' | 'right';
 };
 
 export type SortedInfo = {
