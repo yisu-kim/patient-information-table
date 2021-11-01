@@ -9,7 +9,7 @@ import {
   SortedInfo,
 } from 'components/table/Table';
 import { Container } from './PatientInfoStyle';
-import { Filter } from 'components/table/TableFilterBar';
+import { Filter, Range } from 'components/table/TableFilterBar';
 
 interface PatientProps {
   patientService: PatientService;
@@ -103,21 +103,27 @@ const PatientInfo: React.FC<PatientProps> = ({
   useEffect(() => {
     (async () => {
       try {
+        const ageValue = filters?.age.find((item) => item.hasRange)?.value as
+          | Range
+          | undefined;
+
         const params: PatientListParams = {
           page: currentPage,
           length: rowsPerPage,
           order_column: sortedInfo.columnKey,
           order_desc: sortedInfo.order === 'desc' ? true : false,
-          gender: filters?.gender.find((item) => item.selected)?.value,
-          age_min: filters?.age.find((item) => item.hasRange)?.value.start.value
-            ? filters?.age.find((item) => item.hasRange)?.value.start.value
-            : null,
-          age_max: filters?.age.find((item) => item.hasRange)?.value.end.value
-            ? filters?.age.find((item) => item.hasRange)?.value.end.value
-            : null,
-          race: filters?.race.find((item) => item.selected)?.value,
-          ethnicity: filters?.ethnicity.find((item) => item.selected)?.value,
-          death: filters?.death.find((item) => item.selected)?.value,
+          gender: filters?.gender.find((item) => item.selected)
+            ?.value as string,
+          age_min: ageValue?.start.value
+            ? (ageValue.start.value as number)
+            : undefined,
+          age_max: ageValue?.end.value
+            ? (ageValue.end.value as number)
+            : undefined,
+          race: filters?.race.find((item) => item.selected)?.value as string,
+          ethnicity: filters?.ethnicity.find((item) => item.selected)
+            ?.value as string,
+          death: filters?.death.find((item) => item.selected)?.value as boolean,
         };
 
         const {
@@ -287,7 +293,7 @@ const findByColumnKey = (filteredInfo: FilteredInfo[], columnKey: string) => {
   return filteredInfo.find((item) => item.columnKey === columnKey);
 };
 
-const makeFilters = (filterKeys: any[]): Filter[] => {
+const makeFilters = (filterKeys: string[]): Filter[] => {
   return filterKeys.map((filterKey) => ({
     text: filterKey,
     value: filterKey,
