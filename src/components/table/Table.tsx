@@ -34,7 +34,7 @@ interface TableProps {
   columns: Column[];
   onSort: ({ order, columnKey, columnDataIndex }: SortedInfo) => void;
   onFilter: ({ columnKey, filter }: FilteredInfo) => void;
-  dataSource?: any[];
+  dataSource?: DataSource[];
   detailInfo?: DetailInfo[];
   onShowDetail: (rowIndex: number) => void;
   pagination: {
@@ -78,8 +78,8 @@ const Table: React.FC<TableProps> = ({
   ) => {
     e.stopPropagation();
 
-    if (columnKey !== currentFilters.columnKey) {
-      setCurrentFilters({ columnKey, filters: filters! });
+    if (columnKey !== currentFilters.columnKey && filters) {
+      setCurrentFilters({ columnKey, filters });
       setIsFilterBarOpen(true);
       return;
     }
@@ -288,4 +288,8 @@ type CurrentFilters = {
 export type DetailInfo = {
   title: string;
   text: string;
+};
+
+type DataSource = {
+  [key: string]: string | number;
 };

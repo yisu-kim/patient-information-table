@@ -287,7 +287,7 @@ const findByColumnKey = (filteredInfo: FilteredInfo[], columnKey: string) => {
   return filteredInfo.find((item) => item.columnKey === columnKey);
 };
 
-const makeFilters = (filterKeys: any[]): Filter[] => {
+const makeFilters = (filterKeys: string[]): Filter[] => {
   return filterKeys.map((filterKey) => ({
     text: filterKey,
     value: filterKey,
